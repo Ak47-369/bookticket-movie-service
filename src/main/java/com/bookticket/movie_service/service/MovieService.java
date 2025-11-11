@@ -60,7 +60,7 @@ public class MovieService {
     public List<MovieResponse> findMoviesByCity(String city) {
         // Call theater service to get list of movie IDs
         List<String> movieIds = theaterRestClient.get()
-                .uri("/api/v1/shows/internal/movie-ids/?city={city}", city)
+                .uri("/api/v1/shows/internal/movie-ids?city={city}", city)
                 .retrieve()
                 .body(List.class);
 
