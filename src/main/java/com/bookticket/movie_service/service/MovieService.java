@@ -3,6 +3,7 @@ package com.bookticket.movie_service.service;
 import com.bookticket.movie_service.dto.CreateMovieRequest;
 import com.bookticket.movie_service.dto.MovieResponse;
 import com.bookticket.movie_service.entity.Movie;
+import com.bookticket.movie_service.exception.ResourceNotFoundException;
 import com.bookticket.movie_service.repository.MovieRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -53,7 +54,7 @@ public class MovieService {
 
     public MovieResponse getMovieById(String id) {
         return movieRepository.findById(id).map(movie -> new MovieResponse(movie.getId(), movie.getName(), movie.getDescription()))
-                .orElseThrow(() -> new RuntimeException("Movie not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Movie","Movie Id ",id));
     }
 
     public List<MovieResponse> findMoviesByCity(String city) {
