@@ -32,4 +32,9 @@ public class MovieController {
     public ResponseEntity<MovieResponse> getMovieById(@PathVariable String id) {
         return ResponseEntity.ok(movieService.getMovieById(id));
     }
+
+    @GetMapping("/now-playing")
+    public ResponseEntity<List<MovieResponse>> getMoviesByCity(@RequestParam String city) {
+        return ResponseEntity.ok(movieService.findMoviesByCity(city));
+    }
 }

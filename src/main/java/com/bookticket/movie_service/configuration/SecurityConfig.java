@@ -29,8 +29,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "api/v1/movies/**").hasAnyRole("USER","ADMIN","THEATER_OWNER")
-                        .requestMatchers("api/v1/movies/**").hasAnyRole("ADMIN","THEATER_OWNER")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/movies/**").hasAnyRole("USER", "ADMIN", "THEATER_OWNER")
+                        .requestMatchers("/api/v1/movies/**").hasAnyRole("ADMIN", "THEATER_OWNER")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(headerAuthenticatorFilter(), UsernamePasswordAuthenticationFilter.class);

@@ -18,14 +18,15 @@ public class HeaderAuthenticatorFilter  extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String id = request.getHeader("X-User-Id");
-        String username = request.getHeader("X-User-Name");
-        String roles = request.getHeader("X-User-Role");
-        if (id != null && username != null && roles != null) {
+        String roles = request.getHeader("X-User-Roles");
+        // TO DO - Add X-User-Name , first add it in gateway
+
+        if (id != null && roles != null && !roles.isEmpty()) {
             List<SimpleGrantedAuthority> authorities = Arrays.stream(roles.split(","))
-                    .map(SimpleGrantedAuthority::new)
+                    .map(role -> new SimpleGrantedAuthority(role.trim()))
                     .toList();
-            // Create a new authentication object
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
+
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(id, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);

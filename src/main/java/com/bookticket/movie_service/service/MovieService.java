@@ -6,14 +6,20 @@ import com.bookticket.movie_service.entity.Movie;
 import com.bookticket.movie_service.repository.MovieRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
+
+import java.util.Collections;
+import java.util.List;
 
 @Service
 @Slf4j
 public class MovieService {
     private final MovieRepository movieRepository;
+    private final RestClient theaterRestClient;
 
-    public MovieService(MovieRepository movieRepository) {
+    public MovieService(MovieRepository movieRepository, RestClient theaterRestClient) {
         this.movieRepository = movieRepository;
+        this.theaterRestClient = theaterRestClient;
     }
 
     public MovieResponse createMovie(CreateMovieRequest request) {
@@ -37,5 +43,32 @@ public class MovieService {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public List<MovieResponse> getAllMovies() {
+        return movieRepository.findAll().stream()
+                .map(movie -> new MovieResponse(movie.getId(), movie.getName(), movie.getDescription()))
+                .toList();
+    }
+
+    public MovieResponse getMovieById(String id) {
+        return movieRepository.findById(id).map(movie -> new MovieResponse(movie.getId(), movie.getName(), movie.getDescription()))
+                .orElseThrow(() -> new RuntimeException("Movie not found"));
+    }
+
+    public List<MovieResponse> findMoviesByCity(String city) {
+        // Call theater service to get list of movie IDs
+        List<String> movieIds = theaterRestClient.get()
+                .uri("/api/v1/shows/internal/movie-ids/?city={city}", city)
+                .retrieve()
+                .body(List.class);
+
+        if(movieIds == null || movieIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+        log.info("Found {} movies for city: {}", movieIds.size(), city);
+        return movieRepository.findAllById(movieIds).stream()
+                .map(movie -> new MovieResponse(movie.getId(), movie.getName(), movie.getDescription()))
+                .toList();
     }
 }
