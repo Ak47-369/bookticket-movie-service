@@ -1,4 +1,4 @@
-package com.bookticket.movie_service.configuration;
+package com.bookticket.movie_service.security;
 
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
