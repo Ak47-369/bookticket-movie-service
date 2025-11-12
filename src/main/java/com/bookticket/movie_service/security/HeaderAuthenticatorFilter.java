@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 public class HeaderAuthenticatorFilter  extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -23,11 +25,14 @@ public class HeaderAuthenticatorFilter  extends OncePerRequestFilter {
 
         if (id != null && roles != null && !roles.isEmpty()) {
             List<SimpleGrantedAuthority> authorities = Arrays.stream(roles.split(","))
-                    .map(role -> new SimpleGrantedAuthority(role.trim()))
+                    .map(String::trim)
+                    .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                     .toList();
-
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(id, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            log.info("Successfully authenticated user {} with roles {}", id, authorities);
+        } else {
+            log.warn("HeaderAuthenticatorFilter - Missing headers. X-User-Id: {}, X-User-Roles: {}",id,roles);
         }
         filterChain.doFilter(request, response);
     }

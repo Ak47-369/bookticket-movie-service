@@ -47,6 +47,7 @@ public class MovieService {
     }
 
     public List<MovieResponse> getAllMovies() {
+        // TO DO : Add Pagination + Caching
         return movieRepository.findAll().stream()
                 .map(movie -> new MovieResponse(movie.getId(), movie.getName(), movie.getDescription()))
                 .toList();
