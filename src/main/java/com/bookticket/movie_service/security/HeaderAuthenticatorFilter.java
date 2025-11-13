@@ -21,7 +21,7 @@ public class HeaderAuthenticatorFilter  extends OncePerRequestFilter {
             throws ServletException, IOException {
         String id = request.getHeader("X-User-Id");
         String roles = request.getHeader("X-User-Roles");
-        // TO DO - Add X-User-Name , first add it in gateway
+        // TODO - Add X-User-Name , first add it in gateway
 
         if (id != null && roles != null && !roles.isEmpty()) {
             List<SimpleGrantedAuthority> authorities = Arrays.stream(roles.split(","))
