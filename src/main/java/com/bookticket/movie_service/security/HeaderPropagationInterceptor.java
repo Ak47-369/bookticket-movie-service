@@ -21,11 +21,11 @@ public class HeaderPropagationInterceptor implements ClientHttpRequestIntercepto
             userRoles += ",SERVICE_ACCOUNT"; // Service To Service communication
             
             if (userId != null) {
-                request.getHeaders().add("X-User-Id", userId);
+                request.getHeaders().set("X-User-Id", userId);
             }
             
             if (userRoles != null) {
-                request.getHeaders().add("X-User-Roles", userRoles);
+                request.getHeaders().set("X-User-Roles", userRoles);
             }
         }
         
