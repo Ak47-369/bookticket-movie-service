@@ -1,28 +1,7 @@
 spring:
   application:
     name: movie-service
-  jackson:
-    deserialization:
-      fail-on-unknown-properties: false
-  data:
-    mongodb:
-      uri: mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}/${MONGO_DB}?appName=Cluster0
-      auto-index-creation: true
-  cloud:
-    config:
-      enabled: false
-server:
-  port: 8082
-logging:
-  level:
-    org.springframework.movie_service: DEBUG
-management:
-  server:
-    port: 9092
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      show-details: always
+  config:
+    import: optional:configserver:http://localhost:8888
+  profiles:
+    active: prod
