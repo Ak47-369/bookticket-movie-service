@@ -11,7 +11,7 @@ The **Movie Service** is a core business microservice that acts as the central c
 -   **Search and Query:** Exposes endpoints to allow clients to search and filter the movie catalog.
 
 ## Architecture
-<img width="1190" height="1010" alt="Movie Service-2025-11-26-201412" src="https://github.com/user-attachments/assets/dc21b74d-58cb-4200-b47a-59c053f59609" />
+<img width="1656" height="1052" alt="Movie-Service" src="https://github.com/user-attachments/assets/1d65e4db-99c0-47b6-9f01-1ef518a53ce6" />
 
 
 ### How It Works
@@ -30,8 +30,9 @@ The **Movie Service** is a core business microservice that acts as the central c
 
 ## API Endpoints
 
-The service's endpoints are exposed through the API Gateway under the `/api/v1/movies/**` path. Key operations include:
+The service's endpoints are exposed through the API Gateway under the `/api/v1/movies/**` path. All endpoints require a valid JWT for authentication.
 
--   `GET /api/v1/movies`: Fetches a list of all movies.
--   `GET /api/v1/movies/{id}`: Fetches details for a specific movie.
--   `POST /api/v1/movies`: Adds a new movie to the catalog (requires `ADMIN` role).
+-   `POST /api/v1/movies`: Adds a new movie to the catalog. This is a protected endpoint that requires the user to have either an `ADMIN` or `THEATER_OWNER` role.
+-   `GET /api/v1/movies`: Retrieves a list of all movies available in the system.
+-   `GET /api/v1/movies/{id}`: Fetches detailed information for a single movie by its unique ID.
+-   `GET /api/v1/movies/now-playing`: A search endpoint that finds all movies currently playing in a specific city, based on show data from the Theater Service. This is a key endpoint for the user-facing application.
